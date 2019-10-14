@@ -1,11 +1,12 @@
 package ru.brazhnikov.todolist.service;
 
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.brazhnikov.todolist.persistence.entity.User;
-import ru.brazhnikov.todolist.persistence.repositories.UserRepository;
 import ru.brazhnikov.todolist.representation.UserRepr;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.brazhnikov.todolist.persistence.repositories.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * AccountService - класс сервиса для работы с данными об акаунтах
@@ -25,9 +26,22 @@ public class UserService {
      */
     private final UserRepository userRepository;
 
+    /**
+     *  @access private
+     *  @var BCryptPasswordEncoder passwordEncoder - кодировщик пароля(должен совпадать
+     *  с бином объявленном в классе TodoListApplication)
+     */
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    /**
+     * constructor - конструктор
+     * @param userRepository - репозиторий пользователь
+     * @param passwordEncoder - кодировщик паролей
+     */
     @Autowired
-    public UserService( UserRepository userRepository ) {
+    public UserService( UserRepository userRepository, BCryptPasswordEncoder passwordEncoder ) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -38,7 +52,7 @@ public class UserService {
     public void create( UserRepr userRepr ) {
         User user = new User();
         user.setUsername( userRepr.getUsername() );
-        user.setPassword( userRepr.getPassword() );
+        user.setPassword( this.passwordEncoder.encode( userRepr.getPassword() ) );
         this.userRepository.save( user );
     }
 }
