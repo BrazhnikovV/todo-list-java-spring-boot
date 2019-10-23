@@ -1,18 +1,23 @@
 package ru.brazhnikov.todolist.persistence.entity;
 
-import lombok.Data;
+import lombok.*;
+
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * User - класс сущность пользователя
  *
  * @version 1.0.1
- * @package ru.brazhnikov.todolist.controllers
+ * @package ru.brazhnikov.todolist.persistence.entity
  * @author  Vasya Brazhnikov
  * @copyright Copyright (c) 2019, Vasya Brazhnikov
  */
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -26,10 +31,45 @@ public class User {
 
     /**
      * @access private
-     * @var String username - имя пользователя
+     * @var String username - логин пользователя
      */
     @Column( unique = true, nullable = false )
     private String username;
+
+    /**
+     * @access private
+     * @var String firstName - имя пользователя
+     */
+    //@Column( nullable = false )
+    private String firstName;
+
+    /**
+     * @access private
+     * @var String lastName - фамилия пользователя
+     */
+    //@Column( nullable = false )
+    private String lastName;
+
+    /**
+     * @access private
+     * @var String email - почтовый ящик пользователя
+     */
+    //@Column( nullable = false )
+    private String email;
+
+    /**
+     * @access private
+     * @var boolean enabled - отключенный пользователь
+     */
+    //@Column( nullable = false )
+    private boolean enabled;
+
+    /**
+     * @access private
+     * @var boolean tokenExpired - токен истекший
+     */
+    //@Column( nullable = false )
+    private boolean tokenExpired;
 
     /**
      * @access private
@@ -37,4 +77,14 @@ public class User {
      */
     @Column( nullable = false )
     private String password;
+
+    /**
+     * @access private
+     * @var Collection<Role> roles - связь с ролями
+     */
+    @ManyToMany( fetch = FetchType.LAZY )
+    @JoinTable( name = "users_roles",
+                joinColumns = @JoinColumn( name = "user_id" ),
+                inverseJoinColumns = @JoinColumn( name = "role_id" ) )
+    private Collection<Role> roles;
 }
