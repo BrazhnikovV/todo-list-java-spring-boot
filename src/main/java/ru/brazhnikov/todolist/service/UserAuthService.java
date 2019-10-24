@@ -1,18 +1,23 @@
 package ru.brazhnikov.todolist.service;
 
 import java.util.*;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import ru.brazhnikov.todolist.persistence.entity.Authority;
 import ru.brazhnikov.todolist.persistence.entity.Role;
 import ru.brazhnikov.todolist.persistence.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import ru.brazhnikov.todolist.persistence.entity.Privilege;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.brazhnikov.todolist.persistence.repositories.AuthorityRepository;
 import ru.brazhnikov.todolist.persistence.repositories.RoleRepository;
 import ru.brazhnikov.todolist.persistence.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import ru.brazhnikov.todolist.utils.AuthorityHelper;
 
 import javax.transaction.Transactional;
 
@@ -40,18 +45,25 @@ public class UserAuthService implements UserDetailsService {
      */
     private final RoleRepository roleRepository;
 
-    @Autowired
-    public UserAuthService( UserRepository userRepository, RoleRepository roleRepository ) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
+    /**
+     *  @access private
+     *  @var RoleRepository roleRepository - репозиторий ролей пользователя
+     */
+    private final AuthorityRepository authorityRepository;
 
     /**
-     * loadUserByUsername
-     * @param username
-     * @return UserDetails
-     * @throws UsernameNotFoundException
+     * UserAuthService - конструктор
+     * @param userRepository
+     * @param roleRepository
+     * @param authorityRepository
      */
+    @Autowired
+    public UserAuthService( UserRepository userRepository, RoleRepository roleRepository, AuthorityRepository authorityRepository ) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.authorityRepository = authorityRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException {
         Optional<User> optionalUser = this.userRepository.getUserByUsername( username );
@@ -63,47 +75,7 @@ public class UserAuthService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
             optionalUser.get().getUsername(),
             optionalUser.get().getPassword(),
-            getAuthorities( optionalUser.get().getRoles() )
+            AuthorityHelper.getAuthorities( optionalUser.get().getRoles() )
         );
-    }
-
-    /**
-     * getAuthorities - получить полномочия
-     * @param roles - список ролей
-     * @return Collection<? extends GrantedAuthority>
-     */
-    private Collection<? extends GrantedAuthority> getAuthorities( Collection<Role> roles ) {
-        return this.getGrantedAuthorities( getPrivileges( roles ) );
-    }
-
-    /**
-     * getPrivileges - получить привилегии
-     * @param roles - список ролей
-     * @return List<String>
-     */
-    private List<String> getPrivileges( Collection<Role> roles ) {
-
-        List<String> privileges = new ArrayList<>();
-        List<Privilege> collection = new ArrayList<>();
-        for ( Role role : roles ) {
-            collection.addAll( role.getPrivileges() );
-        }
-        for ( Privilege item : collection ) {
-            privileges.add( item.getName() );
-        }
-        return privileges;
-    }
-
-    /**
-     * getGrantedAuthorities - получить предоставленные полномочия
-     * @param privileges - список привилегий
-     * @return List<GrantedAuthority>
-     */
-    private List<GrantedAuthority> getGrantedAuthorities( List<String> privileges ) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for ( String privilege : privileges ) {
-            authorities.add( new SimpleGrantedAuthority( privilege ) );
-        }
-        return authorities;
     }
 }

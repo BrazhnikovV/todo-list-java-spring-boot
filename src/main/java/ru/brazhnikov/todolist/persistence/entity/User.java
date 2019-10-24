@@ -1,7 +1,6 @@
 package ru.brazhnikov.todolist.persistence.entity;
 
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -33,7 +32,7 @@ public class User {
      * @access private
      * @var String username - логин пользователя
      */
-    @Column( unique = true, nullable = false )
+    @Column( name = "username", unique = true, nullable = false )
     private String username;
 
     /**
@@ -75,7 +74,7 @@ public class User {
      * @access private
      * @var String password - пароль пользователя
      */
-    @Column( nullable = false )
+    @Column(name = "password" )
     private String password;
 
     /**

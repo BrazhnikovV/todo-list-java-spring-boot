@@ -1,16 +1,20 @@
 package ru.brazhnikov.todolist.controllers;
 
+import java.util.ArrayList;
 import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import ru.brazhnikov.todolist.representation.UserRepr;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import ru.brazhnikov.todolist.service.UserService;
+import org.springframework.validation.BindingResult;
+import ru.brazhnikov.todolist.utils.SqlErrorCodeHelper;
+import ru.brazhnikov.todolist.representation.UserRepr;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.validation.annotation.Validated;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * RegistryController - класс контроллер для регистрации пользователя
@@ -23,6 +27,10 @@ import ru.brazhnikov.todolist.service.UserService;
 @Controller
 public class RegistryController {
 
+    /**
+     * @access private
+     * @var UserService userService - сервис для работы с пользователем
+     */
     private final UserService userService;
 
     @Autowired
@@ -46,7 +54,35 @@ public class RegistryController {
             return "registry";
         }
 
-        this.userService.create( userRepr );
+        this.userService.register( userRepr );
         return "redirect:/login";
+    }
+
+    /**
+     * handleError - перехват исключения ConstraintViolationException при аннотации @Column( unique = true ),
+     * чтобы отобразить результат валидации в представлении на форме
+     * @param ex - объект исключения ConstraintViolationException
+     * @param request - объект запроса
+     * @param atts - перенапраляемые атрибуты модели или ошибок валидации
+     * @return
+     */
+    @ExceptionHandler( ConstraintViolationException.class )
+    public RedirectView handleError( ConstraintViolationException ex, WebRequest request, RedirectAttributes atts ) {
+
+        ArrayList errorMessages = new ArrayList<String>();
+        SqlErrorCodeHelper sqlErrorCodeHelper = new SqlErrorCodeHelper();
+
+        String sqlErrorCodeHelperErrorCodes = sqlErrorCodeHelper.getErrorCodes( ex.getSQLException().getSQLState());
+        if ( sqlErrorCodeHelperErrorCodes != null ) {
+            errorMessages.add(sqlErrorCodeHelperErrorCodes);
+        }
+        else {
+            errorMessages.add(ex.getSQLException().getLocalizedMessage());
+        }
+
+        atts.addFlashAttribute("errorMessages", errorMessages);
+        RedirectView redirectView = new RedirectView("/registry");
+
+        return redirectView;
     }
 }

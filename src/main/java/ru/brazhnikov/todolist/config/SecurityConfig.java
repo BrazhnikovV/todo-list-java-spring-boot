@@ -38,21 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private UserAuthService userAuthService;
 
-    /**
-     * setPasswordEncoder - установить хэширование паролей
-     * @param passwordEncoder - объект для выполнения хэширования
-     * @return void
-     */
     @Autowired
     public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * setUserAuthService - установить сервис выполнения аутентификации
-     * @param userAuthService - объект для выполнения аутентификации
-     * @return void
-     */
     @Autowired
     public void setUserAuthService( UserAuthService userAuthService ) {
         this.userAuthService = userAuthService;
@@ -62,8 +52,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *  @access private
      *  @var DataSource myDataSource -
      */
-    @Autowired
     private DataSource myDataSource;
+
+    /**
+     * setMyDataSource -
+     * @param myDataSource -
+     * @return void
+     */
+    @Autowired
+    public void setMyDataSource( DataSource myDataSource ) {
+        this.myDataSource = myDataSource;
+    }
 
     /**
      * configure -
@@ -75,11 +74,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication().dataSource( this.myDataSource );
     }
 
+    /**
+     * configure
+     * @param auth - класс указывающий на то каким
+     * образом должен осуществляться механизм авторизации пользователя
+     */
+//    @Override
+//    protected void configure( AuthenticationManagerBuilder auth ) {
+//        auth.authenticationProvider( authenticationProvider() );
+//    }
+
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers( "/" ).hasAnyRole("ADMIN", "MANAGER")
+            .antMatchers( "/" ).hasAnyRole("ADMIN", "USER", "MANAGER")
             .and()
             .formLogin()
             .loginPage( "/login" )

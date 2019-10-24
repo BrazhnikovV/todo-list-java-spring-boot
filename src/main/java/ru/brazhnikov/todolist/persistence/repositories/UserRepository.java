@@ -17,13 +17,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     /**
-     * existsByUsername - определить существование пользователя по имени
-     * @param username
-     * @return
-     */
-    boolean existsByUsername( String username );
-
-    /**
      * getUserByUsername - получить пользователя по имени
      * @param username
      * @return

@@ -40,7 +40,7 @@ public class Authority {
      * @access private
      * @var String username - название пользователя
      */
-    @Column( unique = true, nullable = false )
+    @Column( nullable = false )
     private String authority;
 
     /**
