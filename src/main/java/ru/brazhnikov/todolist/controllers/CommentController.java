@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * TodoController - класс контроллер
+ * CommentController - класс контроллер
  *
  * @version 1.0.1
  * @package ru.brazhnikov.todolist.controllers
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @copyright Copyright (c) 2019, Vasya Brazhnikov
  */
 @Controller
-@RequestMapping("/todo")
-public class TodoController {
+@RequestMapping("/comments")
+public class CommentController {
 
     @GetMapping
     public String indexPage() {
-        return "todo";
+        return "comments";
     }
 }

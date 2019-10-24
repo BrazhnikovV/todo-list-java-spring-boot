@@ -2,6 +2,7 @@ package ru.brazhnikov.todolist.persistence.entity;
 
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 
 /**
@@ -32,6 +33,7 @@ public class User {
      * @access private
      * @var String username - логин пользователя
      */
+    @NotEmpty
     @Column( name = "username", unique = true, nullable = false )
     private String username;
 
@@ -74,7 +76,8 @@ public class User {
      * @access private
      * @var String password - пароль пользователя
      */
-    @Column(name = "password" )
+    @NotEmpty
+    @Column( name = "password", nullable = false )
     private String password;
 
     /**
