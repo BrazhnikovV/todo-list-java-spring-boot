@@ -8,6 +8,14 @@ import org.springframework.security.core.GrantedAuthority;
 import ru.brazhnikov.todolist.persistence.entity.Privilege;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+/**
+ * AuthorityHelper - класс выбора данных из списков ролей, привилегий, полномочия
+ *
+ * @version 1.0.1
+ * @package ru.brazhnikov.todolist.utils
+ * @author  Vasya Brazhnikov
+ * @copyright Copyright (c) 2019, Vasya Brazhnikov
+ */
 public class AuthorityHelper {
 
     /**

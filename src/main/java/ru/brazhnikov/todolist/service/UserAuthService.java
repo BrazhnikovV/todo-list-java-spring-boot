@@ -1,25 +1,15 @@
 package ru.brazhnikov.todolist.service;
 
 import java.util.*;
-
-import org.springframework.context.MessageSource;
+import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import ru.brazhnikov.todolist.persistence.entity.Authority;
-import ru.brazhnikov.todolist.persistence.entity.Role;
+import ru.brazhnikov.todolist.utils.AuthorityHelper;
 import ru.brazhnikov.todolist.persistence.entity.User;
-import org.springframework.security.core.GrantedAuthority;
-import ru.brazhnikov.todolist.persistence.entity.Privilege;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.brazhnikov.todolist.persistence.repositories.AuthorityRepository;
-import ru.brazhnikov.todolist.persistence.repositories.RoleRepository;
 import ru.brazhnikov.todolist.persistence.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import ru.brazhnikov.todolist.utils.AuthorityHelper;
-
-import javax.transaction.Transactional;
 
 /**
  * UserAuthService - класс сервис для авторизации пользователя
@@ -40,28 +30,12 @@ public class UserAuthService implements UserDetailsService {
     private final UserRepository userRepository;
 
     /**
-     *  @access private
-     *  @var RoleRepository roleRepository - репозиторий ролей пользователя
-     */
-    private final RoleRepository roleRepository;
-
-    /**
-     *  @access private
-     *  @var RoleRepository roleRepository - репозиторий ролей пользователя
-     */
-    private final AuthorityRepository authorityRepository;
-
-    /**
      * UserAuthService - конструктор
      * @param userRepository
-     * @param roleRepository
-     * @param authorityRepository
      */
     @Autowired
-    public UserAuthService( UserRepository userRepository, RoleRepository roleRepository, AuthorityRepository authorityRepository ) {
+    public UserAuthService( UserRepository userRepository ) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.authorityRepository = authorityRepository;
     }
 
     @Override
