@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @author  Vasya Brazhnikov
  * @copyright Copyright (c) 2019, Vasya Brazhnikov
  */
+
 @Controller
+@Secured({"ROLE_MANAGER","ROLE_ADMIN","ROLE_USER"})
 public class MainController {
 
     @GetMapping("/")

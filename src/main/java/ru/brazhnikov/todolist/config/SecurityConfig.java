@@ -1,7 +1,7 @@
 package ru.brazhnikov.todolist.config;
 
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import ru.brazhnikov.todolist.service.UserAuthService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-
-import javax.sql.DataSource;
 
 /**
  * SecurityJavaConfig - конфигурационный класс настройки безопасности
@@ -74,21 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication().dataSource( this.myDataSource );
     }
 
-    /**
-     * configure
-     * @param auth - класс указывающий на то каким
-     * образом должен осуществляться механизм авторизации пользователя
-     */
-//    @Override
-//    protected void configure( AuthenticationManagerBuilder auth ) {
-//        auth.authenticationProvider( authenticationProvider() );
-//    }
-
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers( "/" ).hasAnyRole("ADMIN", "USER", "MANAGER")
             .and()
             .formLogin()
             .loginPage( "/login" )
