@@ -2,6 +2,10 @@ package ru.brazhnikov.todolist.config;
 
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import ru.brazhnikov.todolist.service.UserAuthService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,17 +79,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
         http
-            .authorizeRequests()
+//            .exceptionHandling()
+//                .accessDeniedHandler( new MissingCsrfTokenAccessDeniedHandler() )
+//            .and()
+                .authorizeRequests()
             .and()
-            .formLogin()
-            .loginPage( "/login" )
-            .loginProcessingUrl( "/authenticateTheUser" )
-            .permitAll()
+                .formLogin()
+                .loginPage( "/login" )
+                .loginProcessingUrl( "/authenticateTheUser" )
+                .permitAll()
             .and()
-            .logout()
-            .logoutSuccessUrl("/login")
-            .permitAll();
+                .logout()
+                .logoutSuccessUrl("/login")
+                .permitAll()
+            .and()
+                .csrf()
+                .disable().anonymous()
+            .and()
+                .rememberMe();
     }
+
+//    @Bean
+//    public PersistentTokenRepository persistentTokenRepository() {
+//        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+//        db.setDataSource( this.myDataSource );
+//        return db;
+//    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

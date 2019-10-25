@@ -84,7 +84,7 @@ public class User {
      * @access private
      * @var Collection<Role> roles - связь с ролями
      */
-    @ManyToMany( fetch = FetchType.LAZY )
+    @ManyToMany
     @JoinTable( name = "users_roles",
                 joinColumns = @JoinColumn( name = "user_id" ),
                 inverseJoinColumns = @JoinColumn( name = "role_id" ) )

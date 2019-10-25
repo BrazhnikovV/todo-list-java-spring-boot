@@ -11,18 +11,18 @@
             <div class="col-md-12">
                 <form th:action="@{/registry}" method="post" th:object="${user}">
                     <div class="form-group">
-                        <label>Имя пользователя</label>
+                        <label><i class="fa fa-user color-gray"></i> Имя пользователя</label>
                         <input type="text" class="form-control" th:field="*{username}"  placeholder="Введите имя пользователя">
                         <small class="text-danger" th:each="err: ${#fields.errors('username')}" th:text="${err}"></small>
                         <small th:each="message : ${errorMessages}" class="text-danger" th:text="${message}"></small>
                     </div>
                     <div class="form-group">
-                        <label>Пароль</label>
+                        <label><i class="fa fa-lock color-gray"></i> Пароль</label>
                         <input type="password" class="form-control" th:field="*{password}" placeholder="Введите пароль">
                         <small class="text-danger" th:each="err: ${#fields.errors('password')}" th:text="${err}"></small>
                     </div>
                     <div class="form-group">
-                        <label>Повторите пароль</label>
+                        <label><i class="fa fa-lock color-gray"></i> Повторите пароль</label>
                         <input type="password" class="form-control" th:field="*{matchingPassword}" placeholder="Повторите пароль">
                         <small class="text-danger" th:each="err: ${#fields.errors('matchingPassword')}" th:text="${err}"></small>
                     </div>
