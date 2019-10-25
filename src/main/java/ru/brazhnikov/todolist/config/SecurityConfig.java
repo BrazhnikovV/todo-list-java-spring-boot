@@ -2,10 +2,6 @@ package ru.brazhnikov.todolist.config;
 
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import ru.brazhnikov.todolist.service.UserAuthService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +11,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 /**
  * SecurityJavaConfig - конфигурационный класс настройки безопасности
@@ -96,7 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable().anonymous()
             .and()
-                .rememberMe();
+                .rememberMe()
+            .and().exceptionHandling().accessDeniedPage("/errors/error403");
     }
 
 //    @Bean

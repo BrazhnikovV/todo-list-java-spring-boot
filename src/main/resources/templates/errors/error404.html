@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head lang="en" th:replace="fragments/head :: head"></head>
+<body>
+    <div class="container">
+        <header th:replace="fragments/header :: header"></header>
+        <div th:replace="fragments/top-menu :: top-menu"></div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-wrap d-flex flex-row align-items-center">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-12 text-center">
+                                <span class="display-1 d-block">404</span>
+                                <h3 class="">Страница не найдена.</h3>
+                                <p class="mb-4">Вернитесь на главную страницу и попробуйте снова.</p>
+                                <a href="/" class="btn btn-info">На главную</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
