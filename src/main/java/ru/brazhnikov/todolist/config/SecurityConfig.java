@@ -98,15 +98,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable().anonymous()
             .and()
                 .rememberMe()
-            .and().exceptionHandling().accessDeniedPage("/errors/error403");
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(1209600)
+            .and()
+                .exceptionHandling()
+                .accessDeniedPage("/errors/error403");
     }
 
-//    @Bean
-//    public PersistentTokenRepository persistentTokenRepository() {
-//        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-//        db.setDataSource( this.myDataSource );
-//        return db;
-//    }
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+        db.setDataSource( this.myDataSource );
+        return db;
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
