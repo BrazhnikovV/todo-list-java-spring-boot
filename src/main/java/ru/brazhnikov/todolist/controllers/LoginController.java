@@ -1,10 +1,7 @@
 package ru.brazhnikov.todolist.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.time.LocalDateTime;
 
 /**
  * LoginController - класс контроллер для аутентификации пользователя

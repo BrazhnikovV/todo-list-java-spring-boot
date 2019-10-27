@@ -41,17 +41,17 @@ public class RegistryController {
     @GetMapping("/registry")
     public String registryPage( Model model ) {
         model.addAttribute( "user", new UserRepr() );
-        return "registry";
+        return "pages/examples/register";
     }
 
     @PostMapping("/registry")
     public String registryNewUser(@ModelAttribute("user") @Valid UserRepr userRepr, BindingResult bindingResult ) {
         if ( bindingResult.hasErrors() ) {
-            return "registry";
+            return "pages/examples/register";
         }
         if ( !userRepr.getPassword().equals( userRepr.getMatchingPassword() ) ) {
             bindingResult.rejectValue( "password", "", "Password not matching!" );
-            return "registry";
+            return "pages/examples/register";
         }
 
         this.userService.register( userRepr );
