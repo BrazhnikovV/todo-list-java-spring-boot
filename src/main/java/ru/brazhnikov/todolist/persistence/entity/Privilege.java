@@ -31,7 +31,7 @@ public class Privilege {
      * @access private
      * @var String name - название привилегии
      */
-    @Column( unique = true, nullable = false )
+    @Column( nullable = false )
     private String name;
 
     /**

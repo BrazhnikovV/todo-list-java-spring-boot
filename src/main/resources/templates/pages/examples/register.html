@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head lang="en" th:replace="fragments/head_auth_reg :: head_auth_reg"></head>
-<body class="hold-transition register-page">
-<div class="register-box">
-  <div class="register-logo">
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
     <a href="/"><b>Admin</b>LTE</a>
   </div>
 
-  <div class="register-box-body">
+  <div class="login-box-body">
     <p class="login-box-msg">Register a new membership</p>
 
     <form th:action="@{/registry}" method="post" th:object="${user}">
@@ -53,7 +53,7 @@
   </div>
   <!-- /.form-box -->
 </div>
-<!-- /.register-box -->
+<!-- /.login-box -->
 
 <!-- jQuery 3 -->
 <script src="../../bower_components/jquery/dist/jquery.min.js"></script>

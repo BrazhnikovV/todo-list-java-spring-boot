@@ -83,17 +83,17 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Transactional
     public void onApplicationEvent( ContextRefreshedEvent event ) {
 
-        Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
-        List<Privilege> adminPrivileges = Arrays.asList( readPrivilege, writePrivilege );
-
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges );
-        createRoleIfNotFound("ROLE_USER", Arrays.asList( readPrivilege ) );
-        createRoleIfNotFound("ROLE_MANAGER", Arrays.asList( readPrivilege ) );
-
         Optional<User> optionalUser = this.userRepository.getUserByUsername("admin");
-
         if ( !optionalUser.isPresent() ) {
+
+            Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
+            Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+            List<Privilege> adminPrivileges = Arrays.asList( readPrivilege, writePrivilege );
+
+            createRoleIfNotFound("ROLE_ADMIN", adminPrivileges );
+            createRoleIfNotFound("ROLE_USER", Arrays.asList( readPrivilege ) );
+            createRoleIfNotFound("ROLE_MANAGER", Arrays.asList( readPrivilege ) );
+
             Role adminRole = this.roleRepository.findByName("ROLE_ADMIN" );
             User user = this.createDefaultUserIfNotFound( adminRole );
             this.createAuthorityIfNotFound( user.getUsername(), adminRole.getName() );
@@ -162,8 +162,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         user.setUsername( this.defaultName );
         user.setFirstName( "Vasya" );
         user.setLastName( "Brazhnikov" );
-        user.setPassword( this.passwordEncoder.encode("test"));
-        user.setEmail( "test@test.com" );
+        user.setPassword( this.passwordEncoder.encode( this.defaultName ) );
+        user.setEmail( "admin@test.com" );
         user.setRoles( Arrays.asList( adminRole ) );
         user.setEnabled( true );
         this.userRepository.save(user);
