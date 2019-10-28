@@ -2,20 +2,15 @@ package ru.brazhnikov.todolist.config;
 
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
-import ru.brazhnikov.todolist.service.UserAuthService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 
 /**
  * SecurityJavaConfig - конфигурационный класс настройки безопасности
@@ -37,9 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      *  @access private
-     *  @var UserAuthService userAuthService - кодировщик пароля
+     *  @var DataSource myDataSource -
      */
-    private UserAuthService userAuthService;
+    private DataSource myDataSource;
 
     @Autowired
     public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
@@ -47,31 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void setUserAuthService( UserAuthService userAuthService ) {
-        this.userAuthService = userAuthService;
-    }
-
-    /**
-     *  @access private
-     *  @var DataSource myDataSource -
-     */
-    private DataSource myDataSource;
-
-    /**
-     * setMyDataSource -
-     * @param myDataSource -
-     * @return void
-     */
-    @Autowired
     public void setMyDataSource( DataSource myDataSource ) {
         this.myDataSource = myDataSource;
     }
 
-    /**
-     * configure -
-     * @param auth
-     * @throws Exception
-     */
     @Override
     protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
         auth.jdbcAuthentication().dataSource( this.myDataSource );
@@ -110,13 +84,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
         db.setDataSource( this.myDataSource );
         return db;
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService( this.userAuthService );
-        auth.setPasswordEncoder( this.passwordEncoder );
-        return auth;
     }
 }
