@@ -86,6 +86,7 @@ public class UserService {
         Collection<Role> roles = Arrays.asList( this.roleRepository.findOneByName( this.registryDefaultRole ) );
         user.setUsername( userRepr.getUsername() );
         user.setPassword( this.passwordEncoder.encode( userRepr.getPassword() ) );
+        user.setEnabled( true );
         user.setRoles( roles );
 
         Authority authority = this.authorityRepository.findByUsername( userRepr.getUsername() );

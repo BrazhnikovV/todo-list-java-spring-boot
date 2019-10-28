@@ -9,13 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 
 /**
  * SecurityJavaConfig - конфигурационный класс настройки безопасности
@@ -41,6 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private UserAuthService userAuthService;
 
+    /**
+     *  @access private
+     *  @var DataSource myDataSource -
+     */
+    private DataSource myDataSource;
+
     @Autowired
     public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
         this.passwordEncoder = passwordEncoder;
@@ -50,12 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void setUserAuthService( UserAuthService userAuthService ) {
         this.userAuthService = userAuthService;
     }
-
-    /**
-     *  @access private
-     *  @var DataSource myDataSource -
-     */
-    private DataSource myDataSource;
 
     /**
      * setMyDataSource -
@@ -68,13 +65,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * configure -
+     * configure - задать конфигурацию выполнения аутентификации
      * @param auth
      * @throws Exception
      */
     @Override
-    protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
-        auth.jdbcAuthentication().dataSource( this.myDataSource );
+    protected void configure( AuthenticationManagerBuilder auth ) {
+        auth.authenticationProvider(this.authenticationProvider());
     }
 
     @Override
@@ -83,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //            .exceptionHandling()
 //                .accessDeniedHandler( new MissingCsrfTokenAccessDeniedHandler() )
 //            .and()
-                .authorizeRequests()
+            .authorizeRequests()
             .and()
                 .formLogin()
                 .loginPage( "/login" )
@@ -100,9 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(1209600)
-            .and()
-                .exceptionHandling()
-                .accessDeniedPage("/errors/error403");
+            .and();
     }
 
     @Bean
