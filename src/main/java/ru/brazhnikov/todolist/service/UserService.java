@@ -89,6 +89,10 @@ public class UserService {
         user.setEnabled( true );
         user.setRoles( roles );
 
+        // таблицу authorities, которая требуется соглассно Spring User Schema
+        // (https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#user-schema)
+        // приходится заполнять самостоятельно, как это делать автоматически(чтобы спринг сам заполнял) не нашел,
+        // без нее у меня возникали ошибки в различных ситуациях...
         Authority authority = this.authorityRepository.findByUsername( userRepr.getUsername() );
         if ( authority == null ) {
             authority = new Authority( user.getUsername(), this.registryDefaultRole );
